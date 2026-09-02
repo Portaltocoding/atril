@@ -1,6 +1,7 @@
 {
   "piece": "escala-sol",
   "tempo_map": [ { "measure": 1, "bpm": 80 } ],
+  "tempo_source": "score",
   "events": [
     { "index": 0, "pitch": "G4",  "freq_hz": 392.00, "start_s": 0.00, "duration_s": 0.75, "measure": 1, "beat": 1.0 },
     { "index": 1, "pitch": "A4",  "freq_hz": 440.00, "start_s": 0.75, "duration_s": 0.75, "measure": 1, "beat": 2.0 },
