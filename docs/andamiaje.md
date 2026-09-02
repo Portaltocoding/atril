@@ -2,6 +2,8 @@
 
 Plan de obra del primer escalón, en versión larga: cada decisión explicada hasta el fondo, cada término definido la primera vez que aparece, y un deep dive de arquitectura antes de tocar nada. Al acabar el andamiaje, una partitura digital se recorre sola en pantalla, al tempo.
 
+> **Nota de estado (2 sep 2026).** El andamiaje ya está construido, y al construirlo cambiaron cosas que aquí se daban por decididas: los silencios entraron en el timeline, `pitch` pasó a ser siempre una lista (dobles cuerdas), el timeline lleva todas las voces y la elección se hace en el visor, OSMD se vendorizó en el repo en vez de cargarse por CDN, el cursor se posiciona por tiempo musical en vez de contar pasos, y la página la sirve un FastAPI mínimo. La forma real del fichero manda en [contrato.md](contrato.md).
+
 - Diseño completo del sistema: https://claude.ai/code/artifact/7244a4ad-a990-4360-bf36-f9fd37ae699f
 - Versión artifact de este documento: https://claude.ai/code/artifact/c0caebca-b452-43a3-a145-52636fe88cec
 - Camino de ML del Listener (documento aparte): [listener-ml.md](listener-ml.md)

@@ -2,6 +2,8 @@
 
 Receta pura: qué crear, en qué orden, qué va dentro de cada fichero. El porqué de cada decisión de diseño está en [andamiaje.md](andamiaje.md); este documento añade la capa que faltaba: la misión de cada bloque, cómo conecta con el siguiente, y el mapa completo de qué produce qué. Sigue los defaults de las 7 decisiones propuestas en andamiaje.md (repo público, silencios fuera, OSMD por CDN, puntero simple, ligaduras separadas, doble cuerda a la aguda, harness antes que modelos). Si quieres cambiar alguna antes de empezar, dilo y ajusto la receta.
 
+> **Nota de estado (2 sep 2026).** El andamiaje ya está construido, y al construirlo cambiaron cosas que aquí se daban por decididas: los silencios entraron en el timeline, `pitch` pasó a ser siempre una lista (dobles cuerdas), el timeline lleva todas las voces y la elección se hace en el visor, OSMD se vendorizó en el repo en vez de cargarse por CDN, el cursor se posiciona por tiempo musical en vez de contar pasos, y la página la sirve un FastAPI mínimo. La forma real del fichero manda en [contrato.md](contrato.md).
+
 ---
 
 ## Mapa del bloque a bloque

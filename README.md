@@ -2,7 +2,13 @@
 
 Sistema de práctica de violín: lee una partitura, la recorre en pantalla al tempo, escucha lo que tocas y te dice dónde mover el dedo, en milímetros sobre el diapasón.
 
-**Estado:** en construcción. Ahora mismo se está levantando el *andamiaje*: el primer escalón, sin ML ni LLM, donde una partitura digital se recorre sola en pantalla al tempo.
+**Estado:** andamiaje funcionando. Una partitura se dibuja en pantalla y su cursor avanza al tempo, eligiendo qué voz sigues. Sin ML ni LLM todavía.
+
+```bash
+uv run python -m engine.build data/pieces/mozart-k155/score.musicxml --piece mozart-k155 --bpm 120
+uv run uvicorn server.app:app --port 8000
+# abrir http://localhost:8000/?piece=mozart-k155
+```
 
 ## Cómo está pensado
 
@@ -10,6 +16,7 @@ Dos piezas nunca se hablan directamente: una escribe un fichero JSON en disco y 
 
 ## Documentación
 
+- [`docs/contrato.md`](docs/contrato.md) — la frontera: qué hay dentro de `timeline.json`, y por qué cada campo es como es.
 - [`docs/andamiaje.md`](docs/andamiaje.md) — plan de obra del primer escalón, con el deep dive de arquitectura.
 - [`docs/pasos.md`](docs/pasos.md) — receta de construcción: qué fichero crear, en qué orden y qué va dentro.
 - [`docs/listener-ml.md`](docs/listener-ml.md) — el camino de ML del escucha, de pYIN a un modelo propio.
