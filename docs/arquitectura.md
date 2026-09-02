@@ -2,6 +2,8 @@
 
 Documento de referencia del sistema **tal como está construido**: qué hay en cada carpeta y por qué, por qué se eligió cada pieza del stack, cómo está montado el motor, qué protege cada frontera, y el recorrido completo de una ejecución desde que escribes el comando hasta que el cursor se mueve y suena una nota.
 
+Versión de lectura, en formato Cornell y con cada concepto explicado al paso: [Atril por dentro](https://claude.ai/code/artifact/f8c03291-1e25-4e4c-9edf-1f435e79ec41).
+
 Si algo de aquí contradice a `andamiaje.md` o `pasos.md`, manda este documento: aquellos son el plan, este es lo que existe. La forma exacta del fichero de frontera está en [contrato.md](contrato.md).
 
 ---
@@ -51,7 +53,7 @@ Esa separación es la que permite que el motor tarde diez segundos, o que mañan
 | Pieza | Por qué esta y no otra |
 |---|---|
 | **uv** | Fija el árbol entero de dependencias en `uv.lock` y también la versión de Python, así que el proyecto se reconstruye idéntico dentro de un año. `pip` sin lock deja la reproducibilidad al azar. |
-| **music21** (MIT, MIT) | Parsear MusicXML a mano es un proyecto en sí mismo: compases, alteraciones, ligaduras, anacrusas, repeticiones. music21 ya lo hace, da los tiempos en negras y conoce `MetronomeMark` y `TimeSignature`. Es una librería de musicología, no de audio: encaja porque lo que necesitamos es leer notación, no sonido. |
+| **music21** (MIT) | Parsear MusicXML a mano es un proyecto en sí mismo: compases, alteraciones, ligaduras, anacrusas, repeticiones. music21 ya lo hace, da los tiempos en negras y conoce `MetronomeMark` y `TimeSignature`. Es una librería de musicología, no de audio: encaja porque lo que necesitamos es leer notación, no sonido. |
 | **FastAPI + Pydantic** | El contrato se valida **al salir**, no por confianza. Si el motor escribiera un `timeline.json` fuera de forma, la API devuelve un 500 en vez de mandarle basura al visor. Además es lo que se pide en las ofertas de trabajo, y aquí se usa de verdad, no de adorno. |
 | **OSMD** | Dibujar notación musical con las reglas del grabado (espaciado, agrupación de corcheas, alteraciones de cortesía) es un trabajo de años que no aporta nada a lo que Atril quiere resolver. Se delega, envuelto para poder cambiarlo. |
 | **Sin bundler, scripts clásicos** | El visor son cuatro ficheros. Meter npm y un paso de build para eso añade una herramienta que mantener y una carpeta `node_modules` a un proyecto que por lo demás es Python puro. El precio: los ficheros se comunican por variables globales, no por `import`. Cuando el visor crezca, ese es el primer sitio a revisar. |

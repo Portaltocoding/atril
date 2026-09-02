@@ -16,7 +16,7 @@ Dos piezas nunca se hablan directamente: una escribe un fichero JSON en disco y 
 
 ## Documentación
 
-- [`docs/arquitectura.md`](docs/arquitectura.md) — cómo funciona por dentro: carpetas, stack, motor, fronteras y el recorrido completo de una ejecución.
+- [`docs/arquitectura.md`](docs/arquitectura.md) — cómo funciona por dentro: carpetas, stack, motor, fronteras y el recorrido completo de una ejecución. Versión de lectura, en formato Cornell y con los conceptos explicados: [Atril por dentro](https://claude.ai/code/artifact/f8c03291-1e25-4e4c-9edf-1f435e79ec41).
 - [`docs/contrato.md`](docs/contrato.md) — la frontera: qué hay dentro de `timeline.json`, y por qué cada campo es como es.
 - [`docs/andamiaje.md`](docs/andamiaje.md) — plan de obra del primer escalón, con el deep dive de arquitectura.
 - [`docs/pasos.md`](docs/pasos.md) — receta de construcción: qué fichero crear, en qué orden y qué va dentro.
