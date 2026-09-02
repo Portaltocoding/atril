@@ -1,0 +1,15 @@
+[project]
+name = "atril"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "music21>=10.5.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
