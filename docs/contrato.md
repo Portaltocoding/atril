@@ -8,6 +8,7 @@ La frontera entre el motor y todo lo demás. El motor lo escribe, el visor lo le
 {
   "piece": "mozart-k155",
   "tempo_map": [ { "measure": 1, "bpm": 120 } ],
+  "beats_per_measure": 4,
   "tempo_source": "cli",
   "parts": [
     {
@@ -42,14 +43,17 @@ La frontera entre el motor y todo lo demás. El motor lo escribe, el visor lo le
 
 El hueco que queda a propósito: cuando el fichero no trae tempo, la cadena debería preguntar antes de rendirse *qué obra es esta y a qué tempo se toca*. Eso entra en el MVP como una llamada al LLM cacheada por pieza, y añadirá un cuarto valor a `tempo_source`. Hasta entonces, el motor avisa en vez de inventar.
 
+**`beats_per_measure` existe por el metrónomo.** Sin él no se puede acentuar el primer tiempo del compás, porque el timeline solo sabe de segundos y de eventos. Sale del primer compás de la partitura, y con él vienen dos límites conocidos: una pieza que cambie de compás a mitad no está cubierta, y el metrónomo cuenta desde el segundo cero, así que una anacrusa desplazaría los acentos.
+
 **`measure` y `beat` no son decorativos.** `start_s` mueve el reloj, pero `measure`/`beat` son el enganche con la partitura dibujada: sirven para "saltar al compás 12" y para que el cursor sepa dónde está en tiempo musical, no en segundos.
 
 ## Quién lo toca
 
 - Lo escribe `engine/build.py`, y solo él.
 - Lo valida `server/app.py` con Pydantic al servirlo: si el motor produjera un fichero fuera de contrato, la API devuelve un 500 en vez de pasarle basura al visor.
-- Lo consume `viewer/app.js`, que decide qué voz seguir y cuándo avanzar el puntero.
+- Lo consume `viewer/app.js`, que decide qué voz seguir, cuándo avanzar el puntero y qué programar en audio.
 - `viewer/score-view.js` no lo ve nunca: recibe un tiempo musical y punto.
+- `viewer/audio.js` tampoco: recibe frecuencias, nombres de nota e instantes. Imagen y sonido salen del mismo fichero sin hablarse entre ellos, así que el sonido no puede desincronizarse del cursor por un camino distinto al del reloj.
 
 ## Lo que se aprendió construyéndolo
 

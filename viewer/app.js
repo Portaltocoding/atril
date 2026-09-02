@@ -1,7 +1,9 @@
-// El reloj y el puntero. No sabe nada de OSMD ni de cómo se dibuja: solo lee
-// el timeline, cuenta segundos y le pide a ScoreView dónde poner el cursor.
+// El reloj y el puntero. No sabe nada de OSMD ni de Web Audio: lee el timeline,
+// cuenta segundos, y le dice a ScoreView dónde poner el cursor y a Sonido qué
+// programar. Las dos salidas leen el mismo fichero, sin hablarse entre ellas.
 
 const piece = new URLSearchParams(location.search).get("piece") || "escala-sol";
+const HORIZONTE_S = 0.3; // cuánto audio se programa por delante del reloj
 
 const reloj = {
   corriendo: false,
@@ -10,10 +12,19 @@ const reloj = {
   indice: 0,
 };
 
+const audio = {
+  metronomo: false,
+  notas: false,
+  timbre: "pitido",
+  proximoEvento: 0,
+  proximoClic: 0,
+};
+
 let timeline = null;
 let parte = null;
 let bpm = 100;
 let vista = null;
+const sonido = new Sonido();
 
 const el = (id) => document.getElementById(id);
 
@@ -56,11 +67,49 @@ function situarPuntero(t) {
   vista.irATiempo(negrasDe(parte.events[reloj.indice]));
 }
 
+// Web Audio se programa por adelantado: aquí se le dan los clics y las notas
+// que empiezan en los próximos milisegundos, y él los suena a su hora exacta.
+function programarAudio(t) {
+  if (!sonido.ctx) return;
+  const limite = t + HORIZONTE_S;
+  const segundosPorTiempo = 60 / bpm;
+
+  while (audio.metronomo && audio.proximoClic * segundosPorTiempo < limite) {
+    const cuando = audio.proximoClic * segundosPorTiempo;
+    const primerTiempo = audio.proximoClic % timeline.beats_per_measure === 0;
+    sonido.clic(cuando, primerTiempo);
+    audio.proximoClic += 1;
+  }
+
+  while (
+    audio.notas &&
+    audio.proximoEvento < parte.events.length &&
+    parte.events[audio.proximoEvento].start_s < limite
+  ) {
+    const ev = parte.events[audio.proximoEvento];
+    if (ev.pitch.length) {
+      if (audio.timbre === "violin" && sonido.violin) {
+        sonido.muestreado(ev.pitch, ev.start_s, ev.duration_s);
+      } else {
+        sonido.pitido(ev.freq_hz, ev.start_s, ev.duration_s);
+      }
+    }
+    audio.proximoEvento += 1;
+  }
+}
+
+function reengancharAudio(t) {
+  audio.proximoClic = Math.ceil((t * bpm) / 60);
+  audio.proximoEvento = parte.events.findIndex((e) => e.start_s >= t);
+  if (audio.proximoEvento < 0) audio.proximoEvento = parte.events.length;
+}
+
 function tick() {
   if (!reloj.corriendo) return;
 
   const t = segundosAhora();
   situarPuntero(t);
+  programarAudio(t);
   pintarEstado(t);
 
   if (t >= duracionTotal()) {
@@ -70,8 +119,22 @@ function tick() {
   requestAnimationFrame(tick);
 }
 
-function tocar() {
+async function tocar() {
   if (reloj.corriendo) return;
+
+  const t = reloj.transcurrido;
+  if (audio.metronomo || audio.notas) {
+    try {
+      await sonido.despertar();
+      sonido.anclar(t);
+      reengancharAudio(t);
+    } catch (e) {
+      // Sin audio se sigue tocando: el cursor no depende del altavoz.
+      console.warn("audio no disponible:", e);
+      el("evento").textContent = "sin audio en este navegador";
+    }
+  }
+
   reloj.corriendo = true;
   reloj.t0 = performance.now();
   el("play").textContent = "Pausa";
@@ -82,6 +145,7 @@ function pausar() {
   if (!reloj.corriendo) return;
   reloj.transcurrido = segundosAhora();
   reloj.corriendo = false;
+  sonido.callar(); // cancela lo que estuviera programado por delante
   el("play").textContent = "Tocar";
 }
 
@@ -98,7 +162,20 @@ function cambiarDeVoz(indiceParte) {
   const t = segundosAhora();
   reloj.indice = 0;
   situarPuntero(t);
+  reengancharAudio(t);
   pintarEstado(t);
+}
+
+async function elegirTimbre(valor) {
+  audio.timbre = valor;
+  if (valor !== "violin" || sonido.violin) return;
+
+  const selector = el("timbre");
+  selector.disabled = true;
+  el("evento").textContent = "cargando el violín…";
+  await sonido.cargarViolin();
+  selector.disabled = false;
+  pintarEstado(segundosAhora());
 }
 
 async function iniciar() {
@@ -112,7 +189,8 @@ async function iniciar() {
   parte = timeline.parts[0];
 
   el("pieza").textContent = timeline.piece;
-  el("tempo").textContent = `${bpm} bpm (${timeline.tempo_source})`;
+  el("tempo").textContent =
+    `${bpm} bpm (${timeline.tempo_source}) · ${timeline.beats_per_measure} por compás`;
 
   const selector = el("voz");
   timeline.parts.forEach((p, i) => {
@@ -120,6 +198,16 @@ async function iniciar() {
   });
   selector.disabled = timeline.parts.length < 2;
   selector.addEventListener("change", (e) => cambiarDeVoz(Number(e.target.value)));
+
+  el("metronomo").addEventListener("change", (e) => {
+    audio.metronomo = e.target.checked;
+    if (reloj.corriendo) reengancharAudio(segundosAhora());
+  });
+  el("notas").addEventListener("change", (e) => {
+    audio.notas = e.target.checked;
+    if (reloj.corriendo) reengancharAudio(segundosAhora());
+  });
+  el("timbre").addEventListener("change", (e) => elegirTimbre(e.target.value));
 
   vista = new ScoreView(el("partitura"));
   await vista.cargar(`/api/pieces/${piece}/score.musicxml`);
@@ -129,12 +217,10 @@ async function iniciar() {
   el("reset").disabled = false;
 }
 
-el("play").addEventListener("click", () =>
-  reloj.corriendo ? pausar() : tocar()
-);
+el("play").addEventListener("click", () => (reloj.corriendo ? pausar() : tocar()));
 el("reset").addEventListener("click", reiniciar);
 document.addEventListener("keydown", (e) => {
-  if (e.code === "Space" && e.target.tagName !== "SELECT") {
+  if (e.code === "Space" && !["SELECT", "INPUT"].includes(e.target.tagName)) {
     e.preventDefault();
     reloj.corriendo ? pausar() : tocar();
   }

@@ -15,7 +15,9 @@
     header { display: flex; align-items: baseline; gap: 16px; margin-bottom: 16px; }
     h1 { font-size: 1.3rem; margin: 0; }
     .meta { color: #6b6257; font-size: 0.9rem; }
-    .controles { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .controles { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; margin-bottom: 20px; }
+    .controles label { display: flex; align-items: center; gap: 5px; color: #6b6257; }
+    select { font: inherit; padding: 4px 6px; border: 1px solid #d8d1c4; border-radius: 6px; background: #fff; }
     button {
       font: inherit;
       padding: 6px 16px;
@@ -41,6 +43,12 @@
     <button id="reset" disabled>Reiniciar</button>
     <label for="voz">Sigo la voz:</label>
     <select id="voz"></select>
+    <label><input type="checkbox" id="metronomo"> Metrónomo</label>
+    <label><input type="checkbox" id="notas"> Notas</label>
+    <select id="timbre">
+      <option value="pitido">timbre: oscilador</option>
+      <option value="violin">timbre: violín</option>
+    </select>
     <span id="tiempo">0.00 s</span>
     <span id="evento">cargando…</span>
   </div>
@@ -48,7 +56,9 @@
   <div id="partitura"></div>
 
   <script src="/vendor/opensheetmusicdisplay.min.js"></script>
+  <script src="/vendor/soundfont-player.min.js"></script>
   <script src="/score-view.js"></script>
+  <script src="/audio.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

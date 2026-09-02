@@ -6,6 +6,7 @@
       "bpm": 120.0
     }
   ],
+  "beats_per_measure": 4,
   "tempo_source": "cli",
   "parts": [
     {

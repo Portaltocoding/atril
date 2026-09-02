@@ -6,6 +6,7 @@
       "bpm": 80
     }
   ],
+  "beats_per_measure": 4,
   "tempo_source": "score",
   "parts": [
     {

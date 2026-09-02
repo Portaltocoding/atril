@@ -37,6 +37,7 @@ class Parte(BaseModel):
 class Timeline(BaseModel):
     piece: str
     tempo_map: list[MarcaDeTempo]
+    beats_per_measure: int
     tempo_source: Literal["cli", "score", "default"]
     parts: list[Parte]
 

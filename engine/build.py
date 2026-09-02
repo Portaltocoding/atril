@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-from music21 import converter, note, tempo
+from music21 import converter, meter, note, tempo
 
 BPM_POR_DEFECTO = 100
 
@@ -60,9 +60,13 @@ def build_timeline(ruta_musicxml, piece, bpm=None):
     # Se emiten todas las partes: quién toca cuál se decide al practicar, no aquí.
     partes = list(partitura.parts) or [partitura]
 
+    compases = list(partitura.flatten().getElementsByClass(meter.TimeSignature))
+    beats_por_compas = compases[0].numerator if compases else 4
+
     return {
         "piece": piece,
         "tempo_map": [{"measure": 1, "bpm": bpm}],
+        "beats_per_measure": beats_por_compas,
         "tempo_source": tempo_source,
         "parts": [
             {
