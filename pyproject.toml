@@ -3,7 +3,9 @@ name = "atril"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
+    "fastapi>=0.141.1",
     "music21>=10.5.0",
+    "uvicorn[standard]>=0.52.4",
 ]
 
 [dependency-groups]

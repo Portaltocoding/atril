@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Atril</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font: 15px/1.5 system-ui, sans-serif;
+      background: #faf8f4;
+      color: #2b2620;
+    }
+    header { display: flex; align-items: baseline; gap: 16px; margin-bottom: 16px; }
+    h1 { font-size: 1.3rem; margin: 0; }
+    .meta { color: #6b6257; font-size: 0.9rem; }
+    .controles { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    button {
+      font: inherit;
+      padding: 6px 16px;
+      border: 1px solid #2b2620;
+      border-radius: 6px;
+      background: #f1ede5;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.4; cursor: default; }
+    #tiempo { font-variant-numeric: tabular-nums; font-weight: 600; }
+    #evento { color: #6b6257; }
+    #partitura { background: #fff; border: 1px solid #d8d1c4; border-radius: 8px; padding: 8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Atril</h1>
+    <span class="meta"><span id="pieza">…</span> · <span id="tempo">…</span></span>
+  </header>
+
+  <div class="controles">
+    <button id="play" disabled>Tocar</button>
+    <button id="reset" disabled>Reiniciar</button>
+    <span id="tiempo">0.00 s</span>
+    <span id="evento">cargando…</span>
+  </div>
+
+  <div id="partitura"></div>
+
+  <script src="/vendor/opensheetmusicdisplay.min.js"></script>
+  <script src="/score-view.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
