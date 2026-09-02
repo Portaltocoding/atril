@@ -1,16 +1,130 @@
 {
   "piece": "escala-sol",
-  "tempo_map": [ { "measure": 1, "bpm": 80 } ],
+  "tempo_map": [
+    {
+      "measure": 1,
+      "bpm": 80
+    }
+  ],
   "tempo_source": "score",
-  "events": [
-    { "index": 0, "pitch": "G4",  "freq_hz": 392.00, "start_s": 0.00, "duration_s": 0.75, "measure": 1, "beat": 1.0 },
-    { "index": 1, "pitch": "A4",  "freq_hz": 440.00, "start_s": 0.75, "duration_s": 0.75, "measure": 1, "beat": 2.0 },
-    { "index": 2, "pitch": "B4",  "freq_hz": 493.88, "start_s": 1.50, "duration_s": 0.75, "measure": 1, "beat": 3.0 },
-    { "index": 3, "pitch": "C5",  "freq_hz": 523.25, "start_s": 2.25, "duration_s": 0.75, "measure": 1, "beat": 4.0 },
-    { "index": 4, "pitch": "D5",  "freq_hz": 587.33, "start_s": 3.00, "duration_s": 0.75, "measure": 2, "beat": 1.0 },
-    { "index": 5, "pitch": "E5",  "freq_hz": 659.25, "start_s": 3.75, "duration_s": 0.75, "measure": 2, "beat": 2.0 },
-    { "index": 6, "pitch": "F#5", "freq_hz": 739.99, "start_s": 4.50, "duration_s": 0.75, "measure": 2, "beat": 3.0 },
-    { "index": 7, "pitch": "G5",  "freq_hz": 783.99, "start_s": 5.25, "duration_s": 0.75, "measure": 2, "beat": 4.0 },
-    { "index": 8, "pitch": null,  "freq_hz": null,   "start_s": 6.00, "duration_s": 3.00, "measure": 3, "beat": 1.0 }
+  "parts": [
+    {
+      "name": "parte 1",
+      "events": [
+        {
+          "index": 0,
+          "pitch": [
+            "G4"
+          ],
+          "freq_hz": [
+            392.0
+          ],
+          "start_s": 0.0,
+          "duration_s": 0.75,
+          "measure": 1,
+          "beat": 1.0
+        },
+        {
+          "index": 1,
+          "pitch": [
+            "A4"
+          ],
+          "freq_hz": [
+            440.0
+          ],
+          "start_s": 0.75,
+          "duration_s": 0.75,
+          "measure": 1,
+          "beat": 2.0
+        },
+        {
+          "index": 2,
+          "pitch": [
+            "B4"
+          ],
+          "freq_hz": [
+            493.88
+          ],
+          "start_s": 1.5,
+          "duration_s": 0.75,
+          "measure": 1,
+          "beat": 3.0
+        },
+        {
+          "index": 3,
+          "pitch": [
+            "C5"
+          ],
+          "freq_hz": [
+            523.25
+          ],
+          "start_s": 2.25,
+          "duration_s": 0.75,
+          "measure": 1,
+          "beat": 4.0
+        },
+        {
+          "index": 4,
+          "pitch": [
+            "D5"
+          ],
+          "freq_hz": [
+            587.33
+          ],
+          "start_s": 3.0,
+          "duration_s": 0.75,
+          "measure": 2,
+          "beat": 1.0
+        },
+        {
+          "index": 5,
+          "pitch": [
+            "E5"
+          ],
+          "freq_hz": [
+            659.25
+          ],
+          "start_s": 3.75,
+          "duration_s": 0.75,
+          "measure": 2,
+          "beat": 2.0
+        },
+        {
+          "index": 6,
+          "pitch": [
+            "F#5"
+          ],
+          "freq_hz": [
+            739.99
+          ],
+          "start_s": 4.5,
+          "duration_s": 0.75,
+          "measure": 2,
+          "beat": 3.0
+        },
+        {
+          "index": 7,
+          "pitch": [
+            "G5"
+          ],
+          "freq_hz": [
+            783.99
+          ],
+          "start_s": 5.25,
+          "duration_s": 0.75,
+          "measure": 2,
+          "beat": 4.0
+        },
+        {
+          "index": 8,
+          "pitch": [],
+          "freq_hz": [],
+          "start_s": 6.0,
+          "duration_s": 3.0,
+          "measure": 3,
+          "beat": 1.0
+        }
+      ]
+    }
   ]
 }

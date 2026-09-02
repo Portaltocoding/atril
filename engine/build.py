@@ -20,6 +20,32 @@ def _resolver_tempo(partitura, bpm):
     return BPM_POR_DEFECTO, "default"
 
 
+def _eventos_de(parte, segundos_por_negra):
+    events = []
+    for elemento in parte.flatten().notesAndRests:
+        # pitch es siempre una lista: vacía si es silencio, con varias notas si
+        # es un acorde (en violín, una doble cuerda). Así nadie ramifica por tipo.
+        alturas = (
+            []
+            if isinstance(elemento, note.Rest)
+            else sorted(elemento.pitches, key=lambda p: p.frequency)
+        )
+        events.append(
+            {
+                "index": len(events),
+                "pitch": [p.nameWithOctave for p in alturas],
+                "freq_hz": [round(p.frequency, 2) for p in alturas],
+                "start_s": round(float(elemento.offset) * segundos_por_negra, 2),
+                "duration_s": round(
+                    float(elemento.duration.quarterLength) * segundos_por_negra, 2
+                ),
+                "measure": elemento.measureNumber,
+                "beat": float(elemento.beat),
+            }
+        )
+    return events
+
+
 def build_timeline(ruta_musicxml, piece, bpm=None):
     partitura = converter.parse(str(ruta_musicxml))
     bpm, tempo_source = _resolver_tempo(partitura, bpm)
@@ -31,28 +57,20 @@ def build_timeline(ruta_musicxml, piece, bpm=None):
             "Pasa --bpm si sabes el tempo real."
         )
 
-    events = []
-    for elemento in partitura.flatten().notesAndRests:
-        es_silencio = isinstance(elemento, note.Rest)
-        events.append(
-            {
-                "index": len(events),
-                "pitch": None if es_silencio else elemento.pitch.nameWithOctave,
-                "freq_hz": None if es_silencio else round(elemento.pitch.frequency, 2),
-                "start_s": round(float(elemento.offset) * segundos_por_negra, 2),
-                "duration_s": round(
-                    float(elemento.duration.quarterLength) * segundos_por_negra, 2
-                ),
-                "measure": elemento.measureNumber,
-                "beat": float(elemento.beat),
-            }
-        )
+    # Se emiten todas las partes: quién toca cuál se decide al practicar, no aquí.
+    partes = list(partitura.parts) or [partitura]
 
     return {
         "piece": piece,
         "tempo_map": [{"measure": 1, "bpm": bpm}],
         "tempo_source": tempo_source,
-        "events": events,
+        "parts": [
+            {
+                "name": parte.partName or f"parte {i + 1}",
+                "events": _eventos_de(parte, segundos_por_negra),
+            }
+            for i, parte in enumerate(partes)
+        ],
     }
 
 
@@ -67,7 +85,11 @@ def main():
     timeline = build_timeline(args.musicxml, piece=args.piece, bpm=args.bpm)
     destino = args.out or args.musicxml.parent / "timeline.json"
     destino.write_text(json.dumps(timeline, indent=2, ensure_ascii=False) + "\n")
-    print(f"{destino}: {len(timeline['events'])} eventos, tempo de {timeline['tempo_source']}")
+
+    resumen = ", ".join(
+        f"{p['name']} ({len(p['events'])} eventos)" for p in timeline["parts"]
+    )
+    print(f"{destino}: {resumen}; tempo de {timeline['tempo_source']}")
 
 
 if __name__ == "__main__":

@@ -16,26 +16,27 @@ class ScoreView {
     await this.osmd.load(urlMusicXml);
     this.osmd.render();
     this.osmd.cursor.show();
-    this.indiceActual = 0;
   }
 
-  // Mueve el cursor al evento n del timeline. Cuenta con que el timeline
-  // incluye los silencios, porque el cursor de OSMD también los recorre.
-  irA(indice) {
-    if (indice === this.indiceActual) return;
+  // El cursor de OSMD no avanza nota a nota de una parte: avanza instante a
+  // instante de la partitura entera, así que con varias voces se desincroniza
+  // del índice del evento. Por eso se posiciona por tiempo musical.
+  irATiempo(negras) {
+    const objetivo = negras / 4; // OSMD mide el tiempo en redondas
+    const iterador = () => this.osmd.cursor.iterator;
 
-    if (indice < this.indiceActual) {
+    if (objetivo < iterador().currentTimeStamp.realValue) {
       this.osmd.cursor.reset();
-      this.indiceActual = 0;
     }
-    while (this.indiceActual < indice) {
+    while (
+      !iterador().endReached &&
+      iterador().currentTimeStamp.realValue < objetivo - 1e-6
+    ) {
       this.osmd.cursor.next();
-      this.indiceActual += 1;
     }
   }
 
   reiniciar() {
     this.osmd.cursor.reset();
-    this.indiceActual = 0;
   }
 }

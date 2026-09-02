@@ -21,19 +21,24 @@ class MarcaDeTempo(BaseModel):
 
 class Evento(BaseModel):
     index: int
-    pitch: str | None
-    freq_hz: float | None
+    pitch: list[str]
+    freq_hz: list[float]
     start_s: float
     duration_s: float
     measure: int
     beat: float
 
 
+class Parte(BaseModel):
+    name: str
+    events: list[Evento]
+
+
 class Timeline(BaseModel):
     piece: str
     tempo_map: list[MarcaDeTempo]
     tempo_source: Literal["cli", "score", "default"]
-    events: list[Evento]
+    parts: list[Parte]
 
 
 app = FastAPI(title="Atril")
