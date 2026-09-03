@@ -85,6 +85,10 @@ Las otras dos cubren las dos decisiones que más fácil se rompen sin enterarse:
 
 ---
 
+### Cuando lo único que hay es un MIDI
+
+`engine/from_midi.py` es un ayudante aparte, no parte del motor: convierte un MIDI **tocado** en un MusicXML legible. Un MIDI grabado no guarda ritmo notado, guarda cuándo empieza y cuándo suelta cada nota; tocado staccato, cada corchea sale como semicorchea más silencio y music21 lo escribe tal cual, con la partitura llena de silencios que nadie tocó. El ayudante tira lo que no es fiable (las sueltas) y se queda con lo que sí (los ataques): cada nota dura hasta que empieza la siguiente, y las que atacan a la vez se agrupan en un acorde. En la Gavotte eso convirtió 729 elementos con 323 silencios falsos en 392 eventos limpios. El límite está anotado en el propio fichero: una pieza con silencios de verdad necesitaría un umbral de hueco en vez de estirar siempre.
+
 ## 4. Las fronteras y lo que guarda cada una
 
 Este proyecto no tiene decoradores de autorización ni middlewares, porque todavía no hay usuarios ni permisos. Lo que sí tiene son cuatro puntos donde algo puede entrar mal, y cada uno tiene su defensa:

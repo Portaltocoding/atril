@@ -34,6 +34,12 @@ class ScoreView {
     ) {
       this.osmd.cursor.next();
     }
+    // start_s viene redondeado a centésimas, así que en la última nota el
+    // objetivo cae unas milésimas por detrás y el cursor se sale del final.
+    // Al salirse se apaga: se retrocede una posición y vuelve a verse.
+    if (iterador().endReached) {
+      this.osmd.cursor.previous();
+    }
   }
 
   reiniciar() {

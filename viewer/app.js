@@ -40,8 +40,9 @@ function duracionTotal() {
 }
 
 // El cursor se pide en tiempo musical, no en segundos: OSMD no sabe de relojes.
+// Viene ya en el timeline, sin rehacer la cuenta desde unos segundos redondeados.
 function negrasDe(evento) {
-  return (evento.start_s * bpm) / 60;
+  return evento.offset_q;
 }
 
 function pintarEstado(t) {

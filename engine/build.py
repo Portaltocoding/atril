@@ -35,6 +35,10 @@ def _eventos_de(parte, segundos_por_negra):
                 "index": len(events),
                 "pitch": [p.nameWithOctave for p in alturas],
                 "freq_hz": [round(p.frequency, 2) for p in alturas],
+                # En negras y sin redondear a centésimas: el visor coloca el
+                # cursor con esto, y start_s (redondeado) le fallaría por unas
+                # milésimas justo donde hay notas rápidas.
+                "offset_q": round(float(elemento.offset), 4),
                 "start_s": round(float(elemento.offset) * segundos_por_negra, 2),
                 "duration_s": round(
                     float(elemento.duration.quarterLength) * segundos_por_negra, 2
@@ -61,12 +65,14 @@ def build_timeline(ruta_musicxml, piece, bpm=None):
     partes = list(partitura.parts) or [partitura]
 
     compases = list(partitura.flatten().getElementsByClass(meter.TimeSignature))
-    beats_por_compas = compases[0].numerator if compases else 4
+    # En negras, no en la cifra de arriba del compás: el reloj cuenta negras,
+    # así que en 2/2 un compás son 4 y no 2, y el acento cae donde debe.
+    negras_por_compas = float(compases[0].barDuration.quarterLength) if compases else 4.0
 
     return {
         "piece": piece,
         "tempo_map": [{"measure": 1, "bpm": bpm}],
-        "beats_per_measure": beats_por_compas,
+        "beats_per_measure": negras_por_compas,
         "tempo_source": tempo_source,
         "parts": [
             {

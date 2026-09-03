@@ -23,6 +23,7 @@ class Evento(BaseModel):
     index: int
     pitch: list[str]
     freq_hz: list[float]
+    offset_q: float
     start_s: float
     duration_s: float
     measure: int
@@ -37,7 +38,7 @@ class Parte(BaseModel):
 class Timeline(BaseModel):
     piece: str
     tempo_map: list[MarcaDeTempo]
-    beats_per_measure: int
+    beats_per_measure: float
     tempo_source: Literal["cli", "score", "default"]
     parts: list[Parte]
 

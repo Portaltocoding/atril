@@ -18,6 +18,7 @@ La frontera entre el motor y todo lo demás. El motor lo escribe, el visor lo le
           "index": 0,
           "pitch": ["A4", "A5"],
           "freq_hz": [440.0, 880.0],
+          "offset_q": 0.0,
           "start_s": 0.0,
           "duration_s": 0.5,
           "measure": 1,
@@ -43,7 +44,9 @@ La frontera entre el motor y todo lo demás. El motor lo escribe, el visor lo le
 
 El hueco que queda a propósito: cuando el fichero no trae tempo, la cadena debería preguntar antes de rendirse *qué obra es esta y a qué tempo se toca*. Eso entra en el MVP como una llamada al LLM cacheada por pieza, y añadirá un cuarto valor a `tempo_source`. Hasta entonces, el motor avisa en vez de inventar.
 
-**`beats_per_measure` existe por el metrónomo.** Sin él no se puede acentuar el primer tiempo del compás, porque el timeline solo sabe de segundos y de eventos. Sale del primer compás de la partitura, y con él vienen dos límites conocidos: una pieza que cambie de compás a mitad no está cubierta, y el metrónomo cuenta desde el segundo cero, así que una anacrusa desplazaría los acentos.
+**`beats_per_measure` existe por el metrónomo.** Sin él no se puede acentuar el primer tiempo del compás, porque el timeline solo sabe de segundos y de eventos. Va **en negras**, no en la cifra de arriba del compás: el reloj cuenta negras, así que un 2/2 vale 4 y no 2, y el acento cae donde debe. Sale del primer compás de la partitura, y con él vienen dos límites conocidos: una pieza que cambie de compás a mitad no está cubierta, y el metrónomo cuenta desde el segundo cero, así que una anacrusa desplazaría los acentos.
+
+**`offset_q` es el mismo instante que `start_s`, pero en negras y sin redondear.** Existe porque `start_s` viene redondeado a centésimas para que el JSON se lea, y con notas rápidas ese redondeo basta para que el cursor se pase de nota: a 144 bpm una corchea dura 0.21 s y el error de redondeo la empuja al ataque siguiente. El reloj usa `start_s`; el cursor usa `offset_q`.
 
 **`measure` y `beat` no son decorativos.** `start_s` mueve el reloj, pero `measure`/`beat` son el enganche con la partitura dibujada: sirven para "saltar al compás 12" y para que el cursor sepa dónde está en tiempo musical, no en segundos.
 
@@ -57,6 +60,6 @@ El hueco que queda a propósito: cuando el fichero no trae tempo, la cadena debe
 
 ## Lo que se aprendió construyéndolo
 
-El cursor de OSMD **no avanza nota a nota de una parte**: avanza instante a instante de la partitura completa. Con una sola voz, el índice del evento y los pasos del cursor coinciden y todo parece funcionar; con un cuarteto se desincronizan a la primera nota que tenga la viola y no el violín. Por eso el visor posiciona el cursor por tiempo musical (`start_s × bpm / 60`, en negras) en vez de contar pasos.
+El cursor de OSMD **no avanza nota a nota de una parte**: avanza instante a instante de la partitura completa. Con una sola voz, el índice del evento y los pasos del cursor coinciden y todo parece funcionar; con un cuarteto se desincronizan a la primera nota que tenga la viola y no el violín. Por eso el visor posiciona el cursor por tiempo musical (`offset_q`, en negras) en vez de contar pasos.
 
 Esa suposición tiene un límite conocido: vale mientras `tempo_map` tenga una sola entrada. El día que una pieza cambie de tempo a mitad, la conversión de segundos a negras deja de ser una multiplicación y hay que recorrer el mapa.

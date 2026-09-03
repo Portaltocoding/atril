@@ -10,6 +10,8 @@ uv run uvicorn server.app:app --port 8000
 # abrir http://localhost:8000/?piece=mozart-k155
 ```
 
+Si solo hay un MIDI de la pieza, `engine/from_midi.py` lo convierte antes en un MusicXML legible.
+
 ## Cómo está pensado
 
 Dos piezas nunca se hablan directamente: una escribe un fichero JSON en disco y la otra lo lee. `timeline.json` entre el motor y el visor, `note_events.json` entre el escucha y el corrector. Esto permite depurar a ojo, sustituir cualquier pieza por un fichero escrito a mano, y cambiar de implementación sin que nadie más se entere.

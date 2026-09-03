@@ -20,6 +20,7 @@
           "freq_hz": [
             392.0
           ],
+          "offset_q": 0.0,
           "start_s": 0.0,
           "duration_s": 0.75,
           "measure": 1,
@@ -33,6 +34,7 @@
           "freq_hz": [
             440.0
           ],
+          "offset_q": 1.0,
           "start_s": 0.75,
           "duration_s": 0.75,
           "measure": 1,
@@ -46,6 +48,7 @@
           "freq_hz": [
             493.88
           ],
+          "offset_q": 2.0,
           "start_s": 1.5,
           "duration_s": 0.75,
           "measure": 1,
@@ -59,6 +62,7 @@
           "freq_hz": [
             523.25
           ],
+          "offset_q": 3.0,
           "start_s": 2.25,
           "duration_s": 0.75,
           "measure": 1,
@@ -72,6 +76,7 @@
           "freq_hz": [
             587.33
           ],
+          "offset_q": 4.0,
           "start_s": 3.0,
           "duration_s": 0.75,
           "measure": 2,
@@ -85,6 +90,7 @@
           "freq_hz": [
             659.25
           ],
+          "offset_q": 5.0,
           "start_s": 3.75,
           "duration_s": 0.75,
           "measure": 2,
@@ -98,6 +104,7 @@
           "freq_hz": [
             739.99
           ],
+          "offset_q": 6.0,
           "start_s": 4.5,
           "duration_s": 0.75,
           "measure": 2,
@@ -111,6 +118,7 @@
           "freq_hz": [
             783.99
           ],
+          "offset_q": 7.0,
           "start_s": 5.25,
           "duration_s": 0.75,
           "measure": 2,
@@ -120,6 +128,7 @@
           "index": 8,
           "pitch": [],
           "freq_hz": [],
+          "offset_q": 8.0,
           "start_s": 6.0,
           "duration_s": 3.0,
           "measure": 3,
